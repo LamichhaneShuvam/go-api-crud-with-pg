@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/lamichhaneshuvam/todo-pg/api"
 	"github.com/lamichhaneshuvam/todo-pg/internal/db"
 	"github.com/lamichhaneshuvam/todo-pg/internal/models"
+	"github.com/lamichhaneshuvam/todo-pg/internal/utils"
 )
 
 func CreateTodoHandler(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +20,7 @@ func CreateTodoHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&todo)
 	if err != nil {
-		api.RequestErrorHandler(w, err)
+		utils.RequestErrorHandler(w, err)
 		return
 	}
 
@@ -28,11 +28,11 @@ func CreateTodoHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := todoRepository.Create(&todo); err != nil {
 		log.Println(err)
-		api.InternalErrorHandler(w)
+		utils.InternalErrorHandler(w)
 		return
 	}
 
-	api.CreateResponseHandler(w, todo, "Created todo successfully!")
+	utils.CreateResponseHandler(w, todo, "Created todo successfully!")
 	return
 }
 
@@ -41,7 +41,7 @@ func GetTodoByIdHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 
 	if err != nil {
-		api.RequestErrorHandler(w, err)
+		utils.RequestErrorHandler(w, err)
 		return
 	}
 
@@ -51,15 +51,15 @@ func GetTodoByIdHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			api.NotFoundErrorHandler(w, errors.New("Todo not found!"))
+			utils.NotFoundErrorHandler(w, errors.New("Todo not found!"))
 			return
 		}
 		log.Println(err)
-		api.InternalErrorHandler(w)
+		utils.InternalErrorHandler(w)
 		return
 	}
 
-	api.OkResponseHandler(w, todo, "Fetched todo successfully!")
+	utils.OkResponseHandler(w, todo, "Fetched todo successfully!")
 	return
 }
 
@@ -69,7 +69,7 @@ func DeleteTodoByIdHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 
 	if err != nil {
-		api.RequestErrorHandler(w, err)
+		utils.RequestErrorHandler(w, err)
 	}
 
 	todoRepository := models.TodoRepository{DB: db.DB}
@@ -78,15 +78,15 @@ func DeleteTodoByIdHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			api.NotFoundErrorHandler(w, errors.New("Todo not found!"))
+			utils.NotFoundErrorHandler(w, errors.New("Todo not found!"))
 			return
 		}
 		log.Println(err)
-		api.InternalErrorHandler(w)
+		utils.InternalErrorHandler(w)
 		return
 	}
 
-	api.OkResponseHandler(w, todo, "Deleted todo succssfully!")
+	utils.OkResponseHandler(w, todo, "Deleted todo succssfully!")
 	return
 }
 
@@ -96,14 +96,14 @@ func UpdateTodoByIdHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(vars["id"])
 
 	if err != nil {
-		api.RequestErrorHandler(w, err)
+		utils.RequestErrorHandler(w, err)
 	}
 
 	var todo models.Todo
 
 	err = json.NewDecoder(r.Body).Decode(&todo)
 	if err != nil {
-		api.RequestErrorHandler(w, err)
+		utils.RequestErrorHandler(w, err)
 		return
 	}
 
@@ -114,11 +114,11 @@ func UpdateTodoByIdHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			api.NotFoundErrorHandler(w, errors.New("Todo not found!"))
+			utils.NotFoundErrorHandler(w, errors.New("Todo not found!"))
 			return
 		}
 		log.Println(err)
-		api.InternalErrorHandler(w)
+		utils.InternalErrorHandler(w)
 		return
 	}
 
@@ -133,10 +133,10 @@ func UpdateTodoByIdHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Println(err)
-		api.InternalErrorHandler(w)
+		utils.InternalErrorHandler(w)
 		return
 	}
 
-	api.OkResponseHandler(w, todo, "Updated todo successfully!")
+	utils.OkResponseHandler(w, todo, "Updated todo successfully!")
 	return
 }

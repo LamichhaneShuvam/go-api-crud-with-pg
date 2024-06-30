@@ -34,13 +34,21 @@ func CloseDatabaseConnection() {
 	log.Print("Closed connection with the database")
 }
 
-
-func RunMigration () {
-	err := createTodoTable()
+func RunMigration() {
+	var err error
+	err = createTodoTable()
 	if err != nil {
-		log.Fatal("Error while migration!", err)
+		log.Fatal("Error while running todo table migration!", err)
 	}
 	log.Println("Created todo table successfully!")
+
+	err = createUserTable()
+	if err != nil {
+		log.Fatal("Error while running user table migration", err)
+	}
+	log.Println("Created user table successfully!")
+
+	log.Println("Migration ran successfully!")
 }
 
 func createTodoTable() error {
@@ -58,5 +66,25 @@ func createTodoTable() error {
 		return err
 	}
 
+	return nil
+}
+
+func createUserTable() error {
+	query := `
+		CREATE TABLE IF NOT EXISTS public.user (
+			id SERIAL PRIMARY KEY,
+			email VARCHAR(255) NOT NULL,
+			password VARCHAR(255) NOT NULL,
+			last_login_at timestamp,
+			created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+			updated_at timestamp
+		)
+	`
+
+	_, err := DB.Exec(query)
+
+	if err != nil {
+		return err
+	}
 	return nil
 }
