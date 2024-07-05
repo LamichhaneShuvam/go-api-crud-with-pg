@@ -49,6 +49,12 @@ var (
 	NotFoundErrorHandler = func(w http.ResponseWriter, err error) {
 		writeError(w, err.Error(), http.StatusNotFound)
 	}
+	ConflictErrorHandler = func(w http.ResponseWriter, err error) {
+		writeError(w, err.Error(), http.StatusConflict)
+	}
+	ForbiddenErrorHandler = func(w http.ResponseWriter, err error) {
+		writeError(w, err.Error(), http.StatusUnauthorized)
+	}
 
 	//* Success vars
 	OkResponseHandler = func(w http.ResponseWriter, data any, message string) {

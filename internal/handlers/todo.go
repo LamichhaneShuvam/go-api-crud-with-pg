@@ -40,6 +40,9 @@ func GetTodoByIdHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 
+	userId := r.Header.Get("userId")
+	log.Println("User id that came from the headers=> ", userId)
+
 	if err != nil {
 		utils.RequestErrorHandler(w, err)
 		return
