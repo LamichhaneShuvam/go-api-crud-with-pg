@@ -53,6 +53,9 @@ var (
 		writeError(w, err.Error(), http.StatusConflict)
 	}
 	ForbiddenErrorHandler = func(w http.ResponseWriter, err error) {
+		writeError(w, err.Error(), http.StatusForbidden)
+	}
+	UnauthorizedErrorHandler = func(w http.ResponseWriter, err error) {
 		writeError(w, err.Error(), http.StatusUnauthorized)
 	}
 

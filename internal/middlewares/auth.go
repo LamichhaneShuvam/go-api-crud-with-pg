@@ -14,7 +14,7 @@ func UserAuth(next http.HandlerFunc) http.HandlerFunc {
 		bearerToken := r.Header.Get("Authorization")
 
 		if bearerToken == "" {
-			utils.ForbiddenErrorHandler(w, errors.New("Please login to continue"))
+			utils.UnauthorizedErrorHandler(w, errors.New("Please login to continue"))
 			return
 		}
 
@@ -22,7 +22,7 @@ func UserAuth(next http.HandlerFunc) http.HandlerFunc {
 
 		if err != nil {
 			log.Println(err)
-			utils.ForbiddenErrorHandler(w, errors.New("Token expired, please login to continue"))
+			utils.UnauthorizedErrorHandler(w, errors.New("Token expired, please login to continue"))
 			return
 		}
 
