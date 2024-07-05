@@ -100,6 +100,13 @@ func LoginUserHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//* Update the last login information
+	err = userRepository.UpdateLastLoginAt(userDetails.ID)
+	if err != nil {
+		log.Println(err)
+		//* Not as important field as others
+	}
+
 	jwtToken, err := utils.GenerateJwt(userDetails.ID)
 
 	if err != nil {

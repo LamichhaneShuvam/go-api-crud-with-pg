@@ -95,7 +95,7 @@ func (r *UserRepository) DeleteById(id int) (*User, error) {
 	return user, nil
 }
 
-func (r *UserRepository) updateUserPassword(id int, password string) error {
+func (r *UserRepository) UpdateUserPassword(id int, password string) error {
 	query := `
 		UPDATE user 
 		SET password = $2, updated_at = current_timestamp
@@ -103,6 +103,21 @@ func (r *UserRepository) updateUserPassword(id int, password string) error {
 	`
 
 	_, err := r.DB.Exec(query, id, password)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *UserRepository) UpdateLastLoginAt(id int) error {
+	query := `
+		UPDATE user 
+		SET last_login_at = CURRENT_TIMESTAMP
+		WHERE id = $1
+	`
+
+	_, err := r.DB.Exec(query, id)
 
 	if err != nil {
 		return err
